@@ -10,26 +10,42 @@ const GroupList = ({
 }) => {
     return (
         <ul className="list-group">
-            {Object.keys(items).map((item) => (
-                <li
-                    key={items[item][valuePoperty]}
-                    className={
-                        'list-group-item' +
-                        (items[item] === selectedItem ? ' active' : '')
-                    }
-                    onClick={() => onItemSelect(items[item])}
-                    role="button"
-                >
-                    {items[item][contentProperty]}
-                </li>
-            ))}
+            {Array.isArray(items)
+                ? items.map((item) => (
+                      <li
+                          key={item[valuePoperty]}
+                          className={
+                              'list-group-item' +
+                              (item === selectedItem ? ' active' : '')
+                          }
+                          onClick={() => onItemSelect(item)}
+                          role="button"
+                      >
+                          {item[contentProperty]}
+                      </li>
+                  ))
+                : Object.keys(items).map((item) => (
+                      <li
+                          key={items[item][valuePoperty]}
+                          className={
+                              'list-group-item' +
+                              (items[item] === selectedItem ? ' active' : '')
+                          }
+                          onClick={() => onItemSelect(items[item])}
+                          role="button"
+                      >
+                          {items[item][contentProperty]}
+                      </li>
+                  ))}
         </ul>
     );
 };
+
 GroupList.defaultProps = {
     valuePoperty: '_id',
     contentProperty: 'name'
 };
+
 GroupList.propTypes = {
     items: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
     valuePoperty: PropTypes.string.isRequired,
