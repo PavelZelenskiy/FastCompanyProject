@@ -16,9 +16,9 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
     const caretFillChange = (item) => {
         if (selectedSort.path === item) {
             if (selectedSort.order === 'asc') {
-                return <i className="bi bi-caret-up-fill"></i>;
-            } else {
                 return <i className="bi bi-caret-down-fill"></i>;
+            } else {
+                return <i className="bi bi-caret-up-fill"></i>;
             }
         }
     };

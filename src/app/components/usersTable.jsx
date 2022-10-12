@@ -20,7 +20,7 @@ const UserTable = ({
         },
         professions: { path: 'profession.name', name: 'Профессия' },
         completedMeetings: {
-            path: 'complitedMeetings',
+            path: 'completedMeetings',
             name: 'Встретился, раз'
         },
         rate: { path: 'rate', name: 'Оценка' },
