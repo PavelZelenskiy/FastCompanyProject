@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { paginate } from '../utils/paginate';
 import Pagination from './pagination';
-import PropTypes from 'prop-types';
 import GroupList from './groupList';
 import API from '../api';
 import SearchStatus from './searchStatus';
@@ -122,10 +121,6 @@ const Users = () => {
         );
     }
     return 'loading';
-};
-
-Users.propTypes = {
-    users: PropTypes.array.isRequired
 };
 
 export default Users;
