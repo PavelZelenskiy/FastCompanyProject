@@ -1,11 +1,13 @@
 import React from 'react';
 import NavBar from './components/navBar';
-import Users from './components/users';
+
 import { Route, Switch } from 'react-router-dom';
-import Main from './components/main';
-import Login from './components/login';
+
 import UserCard from './components/userCard';
 import API from './api';
+import Main from './layouts/main';
+import Login from './layouts/login';
+import Users from './layouts/users';
 
 function App() {
     return (

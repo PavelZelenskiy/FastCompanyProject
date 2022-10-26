@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { paginate } from '../utils/paginate';
-import Pagination from './pagination';
-import GroupList from './groupList';
+import Pagination from '../components/pagination';
+import GroupList from '../components/groupList';
 import API from '../api';
-import SearchStatus from './searchStatus';
-import UserTable from './usersTable';
+import SearchStatus from '../components/searchStatus';
+import UserTable from '../components/usersTable';
 import _ from 'lodash';
+import InputSearch from '../components/inputSearch';
 
 const Users = () => {
     const pageSize = 6;
@@ -16,12 +17,17 @@ const Users = () => {
         path: 'name',
         order: 'asc'
     });
+    const [inputValue, setInputValue] = useState('');
 
     const [users, setUsers] = useState();
 
     useEffect(() => {
         API.users.fetchAll().then((data) => setUsers(data));
     }, []);
+
+    const inputValueChange = (e) => {
+        setInputValue(e.target.value);
+    };
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
@@ -47,6 +53,7 @@ const Users = () => {
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
+        setInputValue('');
     };
 
     const handlePageChange = (pageIndex) => {
@@ -58,13 +65,20 @@ const Users = () => {
     };
 
     if (users) {
-        const filtredUsers = selectedProf
-            ? users.filter(
-                  (user) =>
-                      JSON.stringify(user.profession) ===
-                      JSON.stringify(selectedProf)
-              )
-            : users;
+        let filtredUsers;
+        if (inputValue !== '') {
+            filtredUsers = users.filter((user) =>
+                user.name.toLowerCase().includes(inputValue.toLowerCase())
+            );
+        } else if (selectedProf) {
+            filtredUsers = users.filter(
+                (user) =>
+                    JSON.stringify(user.profession) ===
+                    JSON.stringify(selectedProf)
+            );
+        } else {
+            filtredUsers = users;
+        }
 
         const count = filtredUsers.length;
         const sortedUsers = _.orderBy(
@@ -72,6 +86,7 @@ const Users = () => {
             [sortBy.path],
             [sortBy.order]
         );
+
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
         const clearFilter = () => {
@@ -99,6 +114,10 @@ const Users = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <InputSearch
+                        value={inputValue}
+                        onChange={inputValueChange}
+                    />
                     {count > 0 && (
                         <UserTable
                             users={userCrop}
