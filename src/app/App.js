@@ -1,30 +1,23 @@
 import React from 'react';
-import NavBar from './components/navBar';
+import NavBar from './components/ui/navBar';
 
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
-import UserCard from './components/userCard';
-import API from './api';
 import Main from './layouts/main';
 import Login from './layouts/login';
 import Users from './layouts/users';
 
 function App() {
     return (
-        <>
+        <div>
             <NavBar />
             <Switch>
-                <Route path="/main" component={Main} />
-                <Route path="/login" component={Login} />
-                <Route
-                    path="/users/:userId"
-                    render={(props) => (
-                        <UserCard users={API.users} {...props} />
-                    )}
-                />
-                <Route path="/users" component={Users} />
+                <Route path="/users/:userId?/:edit?" component={Users} />
+                <Route path="/login/:type?" component={Login} />
+                <Route path="/" exact component={Main} />
+                <Redirect to="/" />
             </Switch>
-        </>
+        </div>
     );
 }
 
