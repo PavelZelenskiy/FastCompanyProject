@@ -8,6 +8,7 @@ import UserTable from '../../ui/usersTable';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import InputSearch from '../../inputSearch';
+import { useUser } from '../../../hooks/useUsers';
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,13 +17,14 @@ const UsersListPage = () => {
     const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
     const pageSize = 6;
     const [inputValue, setInputValue] = useState('');
-    const [users, setUsers] = useState();
-    useEffect(() => {
-        API.users.fetchAll().then((data) => setUsers(data));
-    }, []);
+    const { users } = useUser();
+    console.log(users);
+
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
+        // setUsers(users.filter((user) => user._id !== userId));
+        console.log(userId);
     };
+
     const handleToggleBookMark = (id) => {
         const newArray = users.map((user) => {
             if (user._id === id) {
@@ -30,7 +32,8 @@ const UsersListPage = () => {
             }
             return user;
         });
-        setUsers(newArray);
+        // setUsers(newArray);
+        console.log(newArray);
     };
 
     useEffect(() => {
@@ -45,12 +48,15 @@ const UsersListPage = () => {
         setSelectedProf(item);
         setInputValue('');
     };
+
     const inputValueChange = (e) => {
         setInputValue(e.target.value);
     };
+
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
+
     const handleSort = (item) => {
         setSortBy(item);
     };
