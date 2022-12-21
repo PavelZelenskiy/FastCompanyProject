@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { validator } from '../../utils/validator';
 import TextField from '../common/form/textField';
 import CheckBoxField from '../common/form/checkBoxField';
-import { useLogin } from '../../hooks/useLogin';
+import { useAuth } from '../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
 // import * as yup from 'yup';
 
@@ -14,8 +14,7 @@ const LoginForm = () => {
         stayOn: false
     });
     const [errors, setErrors] = useState({});
-
-    const { signIn } = useLogin();
+    const { signIn } = useAuth();
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -51,24 +50,11 @@ const LoginForm = () => {
         email: {
             isRequired: {
                 message: 'Электронная почта обязательна для заполнения'
-            },
-            isEmail: {
-                message: 'Email введен некорректно'
             }
         },
         password: {
             isRequired: {
                 message: 'Пароль обязателен для заполнения'
-            },
-            isCapitalSymbol: {
-                message: 'Пароль дожен содержать хотя бы одну заглавную букву'
-            },
-            isContainDigit: {
-                message: 'Пароль дожен содержать хотя бы одно число'
-            },
-            min: {
-                message: 'Пароль должен состоять минимум из 8 символов',
-                value: 8
             }
         }
     };
@@ -97,7 +83,11 @@ const LoginForm = () => {
 
         try {
             await signIn(data);
-            history.push('/');
+            history.push(
+                history.location.state
+                    ? history.location.state.from.pathname
+                    : '/'
+            );
         } catch (error) {
             setErrors(error);
         }

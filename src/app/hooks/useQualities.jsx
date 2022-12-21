@@ -28,23 +28,29 @@ export const QualitiesProvider = ({ children }) => {
         getQualitiesList();
     }, []);
 
-    useEffect(() => {
-        if (error !== null) {
-            toast(error);
-            setError(null);
-        }
-    });
+     const getQuality = (id) => {
+         return qualities.find((q) => q._id === id);
+     };
 
-    function errorCatcher(error) {
-        const { message } = error.response.data;
-        setError(message);
-    }
+     useEffect(() => {
+         if (error !== null) {
+             toast(error);
+             setError(null);
+         }
+     });
 
-    return (
-        <QualitiesContext.Provider value={{ isLoading, qualities }}>
-            {children}
-        </QualitiesContext.Provider>
-    );
+     function errorCatcher(error) {
+         const { message } = error.response.data;
+         setError(message);
+     }
+
+     return (
+         <QualitiesContext.Provider
+             value={{ isLoading, qualities, getQuality }}
+         >
+             {children}
+         </QualitiesContext.Provider>
+     );
 };
 
 QualitiesProvider.propTypes = {

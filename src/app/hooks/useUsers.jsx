@@ -39,12 +39,15 @@ const UserProvider = ({ children }) => {
         const { message } = error.response.data;
         setError(message);
     }
+function getUserById(userId) {
+    return users.find((u) => u._id === userId);
+}
 
-    return (
-        <UserContext.Provider value={{ users }}>
-            {!isLoading ? children : 'loading...'}
-        </UserContext.Provider>
-    );
+return (
+    <UserContext.Provider value={{ users, getUserById }}>
+        {!isLoading ? children : 'loading...'}
+    </UserContext.Provider>
+);
 };
 
 UserProvider.propTypes = {
