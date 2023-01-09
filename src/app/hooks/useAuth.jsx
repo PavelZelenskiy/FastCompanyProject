@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
             if (code === 400) {
                 if (message === 'EMAIL_NOT_FOUND') {
                     const errorObject = {
-                        email: 'Пользователь с таким email не существует'
+                        email: 'Пользователь c таким email не существует'
                     };
                     throw errorObject;
                 } else if (message === 'INVALID_PASSWORD') {
@@ -83,7 +83,7 @@ const AuthProvider = ({ children }) => {
             if (code === 400) {
                 if (message === 'EMAIL_EXISTS') {
                     const errorObject = {
-                        email: 'Пользователь с таким email уже существует'
+                        email: 'Пользователь c таким email уже существует'
                     };
                     throw errorObject;
                 }

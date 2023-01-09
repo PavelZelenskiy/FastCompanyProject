@@ -11,11 +11,11 @@ import {
 const QualitiesList = ({ qualities }) => {
     const dispatch = useDispatch();
     const isLoading = useSelector(getQualitiesLoadingStatus());
-    if (isLoading) return 'Loading...';
     const qualitiesList = useSelector(getQualitiesByIds(qualities));
     useEffect(() => {
         dispatch(loadQualitiesList());
     }, []);
+    if (isLoading) return 'Loading...';
 
     return (
         <>
