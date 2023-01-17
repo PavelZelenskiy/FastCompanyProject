@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAction, createSlice } from '@reduxjs/toolkit';
+import { nanoid } from 'nanoid';
 import commentService from '../../services/comment.service';
 
 const commentsSlice = createSlice({
@@ -19,12 +20,37 @@ const commentsSlice = createSlice({
         commentsRequestFailed: (state, action) => {
             state.error = action.payload;
             state.isLoading = false;
+        },
+        commentCreated: (state, action) => {
+            if (!Array.isArray(state.entities)) {
+                state.entities = [];
+            }
+            state.entities.push(action.payload);
+        },
+        commentRemoved: (state, action) => {
+            if (!Array.isArray(state.entities)) {
+                state.entities = [];
+            }
+            state.entities = state.entities.filter(
+                (c) => c._id !== action.payload
+            );
         }
     }
 });
 
 const { reducer: commentsReducer, actions } = commentsSlice;
-const { commentsRequested, commentsReceived, commentsRequestFailed } = actions;
+const {
+    commentsRequested,
+    commentsReceived,
+    commentsRequestFailed,
+    commentCreated,
+    commentRemoved
+} = actions;
+
+const commentCreateRequested = createAction('comments/commentCreateRequested');
+const commentCreateFailed = createAction('comments/commentCreateFailed');
+const commentRemoveRequested = createAction('comments/commentRemoveRequested');
+const commentRemoveFailed = createAction('comments/commentRemoveFailed');
 
 export const loadCommentsList = (userId) => async (dispatch) => {
     dispatch(commentsRequested());
@@ -33,6 +59,34 @@ export const loadCommentsList = (userId) => async (dispatch) => {
         dispatch(commentsReceived(content));
     } catch (error) {
         dispatch(commentsRequestFailed(error.message));
+    }
+};
+
+export const createComment = (payload, pageId, userId) => async (dispatch) => {
+    dispatch(commentCreateRequested());
+    const comment = {
+        ...payload,
+        _id: nanoid(),
+        pageId: pageId,
+        created_at: Date.now(),
+        userId: userId
+    };
+    try {
+        const { content } = await commentService.createComment(comment);
+        // console.log('content', content);
+        dispatch(commentCreated(content));
+    } catch (error) {
+        dispatch(commentCreateFailed(error.message));
+    }
+};
+
+export const removeComment = (payload) => async (dispatch) => {
+    dispatch(commentRemoveRequested());
+    try {
+        await commentService.removeComment(payload);
+        dispatch(commentRemoved(payload));
+    } catch (error) {
+        dispatch(commentRemoveFailed(error.message));
     }
 };
 
